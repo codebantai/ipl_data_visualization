@@ -1,8 +1,11 @@
 const fs = require("fs");
 const csv = require("csvtojson");
-const matchesPlayedPerYear = require("./ipl/matchesPlayedPerYear.js");
-const matchesWonPerYear = require("./ipl/matchesWonPerYear.js");
-const extraRuns = require("./ipl/extraRuns.js")
+const matchesPlayedPerYear = require("./ipl/matchesPlayedPerYear");
+const matchesWonPerYear = require("./ipl/matchesWonPerYear");
+const extras = require("./ipl/extras");
+const economical=require("./ipl/topEconomicalBowler")
+
+
 const MATCHES_FILE_PATH = "./csv_data/matches.csv";
 const JSON_OUTPUT_FILE_PATH = "./public/data.json";
 const DELIVERIES_FILE_PATH = "./csv_data/deliveries.csv";
@@ -16,21 +19,30 @@ function main() {
         .then((deliveries) => {
           //MATCHES PLAYED PER YEAR
           let result = matchesPlayedPerYear(matches);
-          saveMatchesPlayedPerYear(result);
+          
 
           //number of matches won by each team over all the years of IPL
           let result2 = matchesWonPerYear(matches);
-          saveMatchesWonPerYear(result2);
+          
+          //For the year 2016, plot the extra runs conceded by each team.
+          let result3=extras(matches,deliveries);
 
-          let result3=extraRuns(matches,deliveries);
+          //Top economical bowlers of 2015
+          let result4=economical(matches,deliveries);
+          // console.log(result4)
+          saveJson(result,result2,result3,result4)
+
           
         });
     });
 }
 
-function saveMatchesPlayedPerYear(result) {
+function saveJson(result,result2,result3,result4) {
   const jsonData = {
     matchesPlayedPerYear: result,
+    matchesWonPerYear: result2,
+    extraRunsIn2016: result3,
+    economicalBowlersOf2015:result4
   };
   const jsonString = JSON.stringify(jsonData);
   fs.writeFile(JSON_OUTPUT_FILE_PATH, jsonString, "utf8", (err) => {
@@ -40,25 +52,29 @@ function saveMatchesPlayedPerYear(result) {
   });
 }
 
-function saveMatchesWonPerYear(result) {
-  const jsonData = {
-    matchesWonPerYear: result,
-  };
-  // const jsonString = JSON.stringify(jsonData);
-  fs.readFile(JSON_OUTPUT_FILE_PATH, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-    } else {
-      obj = JSON.parse(data);
-      obj = { ...obj, ...jsonData };
-      json = JSON.stringify(obj);
-      fs.writeFile(JSON_OUTPUT_FILE_PATH, json, "utf8", (err) => {
-        if (err) {
-          console.error(err);
-        }
-      });
-    }
-  });
-}
+// function saveMatchesWonPerYear(result) {
+//   const jsonData = {
+    
+//   };
+//   // const jsonString = JSON.stringify(jsonData);
+//   fs.readFile(JSON_OUTPUT_FILE_PATH, "utf8", (err, data) => {
+//     if (err) {
+//       console.error(err);
+//     } else {
+//       obj = JSON.parse(data);
+//       obj = { ...obj, ...jsonData };
+//       json = JSON.stringify(obj);
+//       fs.writeFile(JSON_OUTPUT_FILE_PATH, json, "utf8", (err) => {
+//         if (err) {
+//           console.error(err);
+//         }
+//       });
+//     }
+//   });
+// }
+
+
+
+
 
 main();

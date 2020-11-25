@@ -11,6 +11,8 @@ function fetchAndVisualizeData() {
   function visualizeData(data) {
     visualizeMatchesPlayedPerYear(data.matchesPlayedPerYear);
     visualizeMatchesWonPerYear(data.matchesWonPerYear);
+    visualizeExtraruns(data.extraRunsIn2016);
+    visualizeEconomicalBowlers(data.economicalBowlersOf2015);
     return;
   }
   
@@ -40,6 +42,12 @@ function fetchAndVisualizeData() {
           text: "Matches"
         }
       },
+      legend: {
+        enabled: false
+    },
+    tooltip: {
+        pointFormat: 'Matches: <b>{point.y:.0f}</b>'
+    },
       series: [
         {
           name: "Years",
@@ -59,11 +67,11 @@ function fetchAndVisualizeData() {
         for(let team in matchesWonPerYear[year]){
           if(!teams.includes(team) )
           teams.push(team) 
-        }
+        } 
         categories.push(year)
     }
-    console.log(categories)
-      for(let team of teams){
+    // console.log(categories)
+      for(let team of teams){ 
         let temp=[]
         
           for(let year of categories){
@@ -80,10 +88,10 @@ function fetchAndVisualizeData() {
       for(let team in teams){
         let temp_Obj={}
         temp_Obj["name"]=teams[team]
-        temp_Obj["data"]=team_wins[team]
+        temp_Obj["data"]=team_wins[team]  
         series.push(temp_Obj)
       }
-      console.log(series)
+      // console.log(series)
     // console.log(team_wins,teams)
     Highcharts.chart('container', {
       chart: {
@@ -108,7 +116,7 @@ function fetchAndVisualizeData() {
       tooltip: {
           headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
           pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-              '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+              '<td style="padding:0"><b>{point.y:.0f} </b></td></tr>',
           footerFormat: '</table>',
           shared: true,
           useHTML: true
@@ -121,4 +129,116 @@ function fetchAndVisualizeData() {
       },
       series: series
   });
+  }
+
+
+  function visualizeExtraruns(extraRunsIn2016) {
+    const seriesData = [];
+    for (let extras in extraRunsIn2016) {
+      seriesData.push([extras, extraRunsIn2016[extras]]);
+    }
+  
+    Highcharts.chart('extra_runs', {
+      chart: {
+          type: 'column'
+      },
+      title: {
+          text: 'extra runs conceded by each team'
+      },
+      subtitle: {
+          text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+      },
+      xAxis: {
+          type: 'category',
+          labels: {
+              rotation: -45,
+              style: {
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif'
+              }
+          }
+      },
+      yAxis: {
+          min: 0,
+          title: {
+              text: 'Extras'
+          }
+      },
+      legend: {
+          enabled: false
+      },
+      tooltip: {
+          pointFormat: 'Extras: <b>{point.y:.0f}</b>'
+      },
+      series: [{
+          name: 'Extras',
+          data: seriesData,
+          dataLabels: {
+              enabled: true,
+              rotation: 0,
+              color: '#FFFFFF',
+              align: 'center',
+              format: '{point.y:.0f}', // one decimal
+              y: 20, // 10 pixels down from the top
+              style: {
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif'
+              }
+          }
+      }]
+  });
+  }
+
+
+  function visualizeEconomicalBowlers(economicalBowlersOf2015){
+
+    const data=Object.entries(economicalBowlersOf2015);
+    console.log(data)
+    Highcharts.chart('economical', {
+      chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: 0,
+          plotShadow: false
+      },
+      title: {
+          text: 'Top<br>Economical bowlers of<br>2015',
+          align: 'center',
+          verticalAlign: 'middle',
+          y: 60
+      },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}</b>'
+      },
+      accessibility: {
+          point: {
+              valueSuffix: '%'
+          }
+      },
+      plotOptions: {
+          pie: {
+              dataLabels: {
+                  enabled: true,
+                  distance: -50,
+                  style: {
+                      fontWeight: 'bold',
+                      color: 'white'
+                  }
+              },
+              startAngle: -90,
+              endAngle: 90,
+              center: ['50%', '75%'],
+              size: '110%'
+          }
+      },
+      series: [{
+          type: 'pie',
+          name: 'Economical Bowlers',
+          innerSize: '50%',
+          data: [
+              ...data,
+          ]
+      }]
+  });
+
+
   }
