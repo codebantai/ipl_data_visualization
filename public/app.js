@@ -1,3 +1,4 @@
+// global.fetch = require("node-fetch");
 
 
 function fetchAndVisualizeData() {
@@ -12,7 +13,8 @@ function fetchAndVisualizeData() {
     visualizeMatchesPlayedPerYear(data.matchesPlayedPerYear);
     visualizeMatchesWonPerYear(data.matchesWonPerYear);
     visualizeExtraruns(data.extraRunsIn2016);
-    visualizeEconomicalBowlers(data.economicalBowlersOf2015);
+    visualizeEconomicalBowlers(data.economicalBowlersEachYear[2016]);
+    visualizeEconomicalEachYear(data.economicalBowlersEachYear,2011);
     return;
   }
   
@@ -56,6 +58,10 @@ function fetchAndVisualizeData() {
       ]
     });
   }
+
+
+
+
   function visualizeMatchesWonPerYear(matchesWonPerYear){
   
     let categories=[]
@@ -242,3 +248,74 @@ function fetchAndVisualizeData() {
 
 
   }
+
+
+  let selectButton=document.getElementById("select-button")
+  let yearSelected=document.getElementById("select-container");
+
+  selectButton.onclick=()=>{
+    fetchEconomical(yearSelected.value)
+  }
+  function fetchEconomical(year){
+  fetch("./data.json")
+      .then(r => r.json())
+      .then(data=>visualizeEconomicalEachYear(data.economicalBowlersEachYear,year))  
+  }
+
+  function visualizeEconomicalEachYear(economicalBowlersOf2015,year){
+    
+    
+
+      const data=Object.entries(economicalBowlersOf2015[year]);
+    // console.log(data)
+    Highcharts.chart('economical-year', {
+      chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: 0,
+          plotShadow: false
+      },
+      title: {
+          text: `Top<br>Economical bowlers of<br>${year}`,
+          align: 'center',
+          verticalAlign: 'middle',
+          y: 60
+      },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}</b>'
+      },
+      accessibility: {
+          point: {
+              valueSuffix: '%'
+          }
+      },
+      plotOptions: {
+          pie: {
+              dataLabels: {
+                  enabled: true,
+                  distance: -50,
+                  style: {
+                      fontWeight: 'bold',
+                      color: 'white'
+                  }
+              },
+              startAngle: -90,
+              endAngle: 90,
+              center: ['50%', '75%'],
+              size: '110%'
+          }
+      },
+      series: [{
+          type: 'pie',
+          name: 'Economical Bowlers',
+          innerSize: '50%',
+          data: [
+              ...data,
+          ]
+      }]
+  });
+  
+
+
+  }
+
+  

@@ -3,7 +3,7 @@ const csv = require("csvtojson");
 const matchesPlayedPerYear = require("./ipl/matchesPlayedPerYear");
 const matchesWonPerYear = require("./ipl/matchesWonPerYear");
 const extras = require("./ipl/extras");
-const economical=require("./ipl/topEconomicalBowler")
+const economical=require("./ipl/topEconomicalBowler");
 
 
 const MATCHES_FILE_PATH = "./csv_data/matches.csv";
@@ -30,7 +30,7 @@ function main() {
           //Top economical bowlers of 2015
           let result4=economical(matches,deliveries);
           // console.log(result4)
-          saveJson(result,result2,result3,result4)
+          saveJson(result,result2,result3,result4);
 
           
         });
@@ -42,7 +42,7 @@ function saveJson(result,result2,result3,result4) {
     matchesPlayedPerYear: result,
     matchesWonPerYear: result2,
     extraRunsIn2016: result3,
-    economicalBowlersOf2015:result4
+    economicalBowlersEachYear:result4
   };
   const jsonString = JSON.stringify(jsonData);
   fs.writeFile(JSON_OUTPUT_FILE_PATH, jsonString, "utf8", (err) => {
