@@ -1,6 +1,8 @@
 // global.fetch = require("node-fetch");
 
 
+
+
 function fetchAndVisualizeData() {
     fetch("./data.json")
       .then(r => r.json())
@@ -15,6 +17,7 @@ function fetchAndVisualizeData() {
     visualizeExtraruns(data.extraRunsIn2016);
     visualizeEconomicalBowlers(data.economicalBowlersEachYear[2016]);
     visualizeEconomicalEachYear(data.economicalBowlersEachYear,2011);
+    visualizeTeamWinsPerVenue(data.teamWinsperVenue);
     return;
   }
   
@@ -199,7 +202,7 @@ function fetchAndVisualizeData() {
   function visualizeEconomicalBowlers(economicalBowlersOf2015){
 
     const data=Object.entries(economicalBowlersOf2015);
-    console.log(data)
+    // console.log(data)
     Highcharts.chart('economical', {
       chart: {
           plotBackgroundColor: null,
@@ -317,5 +320,66 @@ function fetchAndVisualizeData() {
 
 
   }
+function visualizeTeamWinsPerVenue(teamWinsperVenue){
+    let series=[]
+    let stadiums=[]
+    let teams=[]
+    
+    for(let venue in teamWinsperVenue){
+        stadiums.push(venue) 
+        for (let team  in  teamWinsperVenue[venue]){
+            if(!teams.includes(team) && team!="")
+            teams.push(team)
+        }
+    }
+    for(team of teams){
+        // console.log(team)
+        let obj={}
+        obj["name"]=team;
+        obj["data"]=[];
+        for(let stadium of stadiums){
+            if(teamWinsperVenue[stadium].hasOwnProperty(team))   {
+                obj["data"].push(teamWinsperVenue[stadium][team])
+            }
+            else{
+                obj["data"].push(0);
+            }
+        }
+        series.push(obj)
+    }
+    
+    
 
+
+
+    Highcharts.chart('venue-wins', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Matches won by each team per venue'
+        },
+        xAxis: {
+            categories: stadiums
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Total matches won'
+            }
+        },
+        legend: {
+            reversed: true
+        },
+        plotOptions: {
+            series: {
+                stacking: 'normal'
+            }
+        },
+        series: series
+    });
+          
+
+
+}
   

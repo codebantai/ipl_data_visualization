@@ -1,5 +1,12 @@
 body {
     font-family: sans-serif;
+ 
+}
+.high-chart{
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2) , 0 4px 20px 0 rgba(48, 45, 45, 0);
+  margin :20px;
+  padding:10px;
+    
 }
 button {
     background-color: #101110; 
