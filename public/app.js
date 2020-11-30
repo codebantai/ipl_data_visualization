@@ -16,7 +16,7 @@ function fetchAndVisualizeData() {
     visualizeMatchesWonPerYear(data.matchesWonPerYear);
     visualizeExtraruns(data.extraRunsIn2016);
     visualizeEconomicalBowlers(data.economicalBowlersEachYear[2016]);
-    visualizeEconomicalEachYear(data.economicalBowlersEachYear,2011);
+    visualizeEconomicalEachYear(data.economicalBowlersEachYear[2011],2011);
     visualizeTeamWinsPerVenue(data.teamWinsperVenue);
     return;
   }
@@ -260,16 +260,18 @@ function fetchAndVisualizeData() {
     fetchEconomical(yearSelected.value)
   }
   function fetchEconomical(year){
-  fetch("./data.json")
+      let url="https://ipl-economy-data-server.herokuapp.com/economy/"
+      url+=year;
+  fetch(url)
       .then(r => r.json())
-      .then(data=>visualizeEconomicalEachYear(data.economicalBowlersEachYear,year))  
+      .then(data=>visualizeEconomicalEachYear(data))  
   }
 
   function visualizeEconomicalEachYear(economicalBowlersOf2015,year){
     
     
 
-      const data=Object.entries(economicalBowlersOf2015[year]);
+      const data=Object.entries(economicalBowlersOf2015);
     // console.log(data)
     Highcharts.chart('economical-year', {
       chart: {
