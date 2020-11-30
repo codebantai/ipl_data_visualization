@@ -2,7 +2,11 @@
 ipl data visualization
 ## Install
 
+<<<<<<< HEAD
 ## Demo  https://vasanth-ipl-data-visualization.netlify.app/
+=======
+## Demo https://vasanth-ipl-data-visualization.netlify.app/
+>>>>>>> 40895a3dff09316b74fec2cef857382e58453e91
 
 **1: Install Node**
 
