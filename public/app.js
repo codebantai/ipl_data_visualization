@@ -264,13 +264,13 @@ function fetchAndVisualizeData() {
       url+=year;
   fetch(url)
       .then(r => r.json())
-      .then(data=>visualizeEconomicalEachYear(data))  
+      .then(data=>visualizeEconomicalEachYear(data,year))  
   }
 
   function visualizeEconomicalEachYear(economicalBowlersOf2015,year){
     
     
-
+    console.log(year)
       const data=Object.entries(economicalBowlersOf2015);
     // console.log(data)
     Highcharts.chart('economical-year', {
